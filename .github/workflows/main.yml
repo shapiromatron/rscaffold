@@ -30,9 +30,15 @@ jobs:
       - name: check package
         uses: r-lib/actions/check-r-package@v2
       - name: run unit test
-        run: R --quiet -e "devtools::test()" >> $GITHUB_STEP_SUMMARY
+        run: |
+          echo "# Test output\n\n```" >> $GITHUB_STEP_SUMMARY
+          R --quiet -e "devtools::test()" >> $GITHUB_STEP_SUMMARY
+          echo "```" >> $GITHUB_STEP_SUMMARY
       - name: coverage text report
-        run: R --quiet -e "covr::package_coverage()" >> $GITHUB_STEP_SUMMARY
+        run: |
+          echo "# Coverage output\n\n```" >> $GITHUB_STEP_SUMMARY
+          R --quiet -e "covr::package_coverage()" >> $GITHUB_STEP_SUMMARY
+          echo "```" >> $GITHUB_STEP_SUMMARY
       - name: coverage interactive report
         run: R --quiet -e "covr::report(file='coverage_html/index.html')"
       - name: upload coverage interactive report
