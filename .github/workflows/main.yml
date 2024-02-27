@@ -26,8 +26,7 @@ jobs:
           use-public-rspm: true
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck, any::covr
-          needs: dev
+          extra-packages: any::rcmdcheck, any::covr, any::DT
       - name: check package
         uses: r-lib/actions/check-r-package@v2
       - name: run unit test
