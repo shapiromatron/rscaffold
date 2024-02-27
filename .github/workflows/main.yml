@@ -1,0 +1,41 @@
+name: ci-checks
+
+# run on all pull requests and on select branch pushes
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  R-CMD-check:
+    runs-on: ${{ matrix.config.os }}
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - {os: ubuntu-22.04, r: 'release'}
+          - {os: windows-2022, r: 'release'}
+    env:
+      R_KEEP_PKG_SOURCE: yes
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::rcmdcheck
+          needs: dev
+      - name: check package
+        uses: r-lib/actions/check-r-package@v2
+      - name: run unit test
+        run: R --quiet -e "devtools::test()" >> $GITHUB_STEP_SUMMARY
+      - name: coverage text report
+        run: R --quiet -e "covr::package_coverage()" >> $GITHUB_STEP_SUMMARY
+      - name: coverage interactive report
+        run: R --quiet -e "covr::report(file='coverage_html/index.html')"
+      - name: upload coverage interactive report
+        uses: actions/upload-artifact@v4
+        path: coverage_html
