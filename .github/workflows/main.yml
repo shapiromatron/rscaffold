@@ -20,30 +20,36 @@ jobs:
     env:
       R_KEEP_PKG_SOURCE: yes
     steps:
-      - uses: actions/checkout@v4
-      - uses: r-lib/actions/setup-r@v2
-        with:
-          use-public-rspm: true
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          extra-packages: any::rcmdcheck, any::covr, any::DT, any::devtools
-      - name: check package
-        uses: r-lib/actions/check-r-package@v2
-      - name: run unit test
-        run: |
-          echo "# Test output\n\n```" >> $GITHUB_STEP_SUMMARY
-          R --quiet -e "devtools::test()" >> $GITHUB_STEP_SUMMARY
-          echo "```" >> $GITHUB_STEP_SUMMARY
       - name: coverage text report
         run: |
-          echo "# Coverage output\n\n```" >> $GITHUB_STEP_SUMMARY
-          R --quiet -e "covr::package_coverage()" >> $GITHUB_STEP_SUMMARY
-          echo "```" >> $GITHUB_STEP_SUMMARY
-      - name: coverage interactive report
-        run: R --quiet -e "covr::report(file='coverage_html/index.html')"
-      - name: upload coverage interactive report
-        uses: actions/upload-artifact@v4
-        with:
-          name: rscaffold-coverage
-          path: coverage_html
-          retention-days: 7
+          echo "# Coverage output" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "print('hi')" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+      # - uses: actions/checkout@v4
+      # - uses: r-lib/actions/setup-r@v2
+      #   with:
+      #     use-public-rspm: true
+      # - uses: r-lib/actions/setup-r-dependencies@v2
+      #   with:
+      #     extra-packages: any::rcmdcheck, any::covr, any::DT, any::devtools
+      # - name: check package
+      #   uses: r-lib/actions/check-r-package@v2
+      # - name: run unit test
+      #   run: |
+      #     echo "# Test output\n\n```" >> $GITHUB_STEP_SUMMARY
+      #     R --quiet -e "devtools::test()" >> $GITHUB_STEP_SUMMARY
+      #     echo "```" >> $GITHUB_STEP_SUMMARY
+      # - name: coverage text report
+      #   run: |
+      #     echo "# Coverage output\n\n```" >> $GITHUB_STEP_SUMMARY
+      #     R --quiet -e "covr::package_coverage()" >> $GITHUB_STEP_SUMMARY
+      #     echo "```" >> $GITHUB_STEP_SUMMARY
+      # - name: coverage interactive report
+      #   run: R --quiet -e "covr::report(file='coverage_html/index.html')"
+      # - name: upload coverage interactive report
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: rscaffold-coverage
+      #     path: coverage_html
+      #     retention-days: 7
