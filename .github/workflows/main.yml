@@ -64,10 +64,9 @@ jobs:
           }
           coverage_output_markdown <- markdown(coverage_output)
           # log output to $GITHUB_STEP_SUMMARY
-          gh <- "# Coverage Report"
-          gh <- paste(gh, "```", sep="\n")
+          gh <- "# Coverage Summary Report"
           gh <- paste(gh, coverage_output_markdown, sep="\n")
-          gh <- paste(gh, "```", sep="\n")
+          gh <- paste(gh, "View the interactive report by downloading the artifact.", sep="\n")
           # Get system information
           sys_info <- Sys.info()
           is_linux <- sys_info["sysname"] == "Linux"
