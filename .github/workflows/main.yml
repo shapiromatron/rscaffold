@@ -29,33 +29,27 @@ jobs:
           extra-packages: any::rcmdcheck, any::covr, any::DT, any::devtools
       - name: check package
         uses: r-lib/actions/check-r-package@v2
-      # run tests
       - name: Test coverage
-        if: runner.os == 'Windows'
         run: |
-          devtools::test()
-        shell: Rscript {0}
-      - name: Test coverage
-        if: runner.os == 'Linux'
-        run: |
-          covr::codecov(
+          x <- covr::package_coverage(
             quiet = FALSE,
             clean = FALSE,
-            install_path = file.path(Sys.getenv("RUNNER_TEMP"), "package")
           )
+          covr::report(
+            x,
+            file = 'coverage_html/index.html',
+            browse =  FALSE
+          )
+          output <- print(x)
+          output_log <- Sys.getenv("GITHUB_STEP_SUMMARY", "")
+          output_log <- paste(output_log, "# Coverage Report", sep="\n")
+          output_log <- paste(output_log, output, sep="\n")
+          Sys.setenv(GITHUB_STEP_SUMMARY = output_log)
         shell: Rscript {0}
-      # fetch coverage outputs
-      - name: Show coverage outputs
-        if: runner.os == 'Linux'
-        run: |
-          find ${{ runner.temp }}/package -name 'testthat.Rout*' -exec cat '{}' \; || true
-          echo "# Output coverage:" >> $GITHUB_STEP_SUMMARY
-          find ${{ runner.temp }}/package -name 'testthat.Rout*' -exec cat '{}' \; || true >> $GITHUB_STEP_SUMMARY
-        shell: bash
-      - name: Upload test results
+      - name: upload coverage interactive report
         uses: actions/upload-artifact@v4
-        if: runner.os == 'Linux' && failure()
+        if: runner.os == 'Linux'
         with:
           name: rscaffold-coverage
-          path: ${{ runner.temp }}/package
+          path: coverage_html
           retention-days: 7
