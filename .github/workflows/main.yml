@@ -29,23 +29,27 @@ jobs:
           extra-packages: any::rcmdcheck, any::covr, any::DT, any::devtools
       - name: check package
         uses: r-lib/actions/check-r-package@v2
+      - name: Test coverage (start)
+        run: |
+          echo "# Test summary" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+        shell: bash
       - name: Test coverage
         run: |
-          x <- covr::package_coverage(
+          coverage_output <- covr::package_coverage(
             quiet = FALSE,
             clean = FALSE,
           )
           covr::report(
-            x,
+            coverage_output,
             file = 'coverage_html/index.html',
             browse =  FALSE
           )
-          output <- print(x)
-          output_log <- Sys.getenv("GITHUB_STEP_SUMMARY", "")
-          output_log <- paste(output_log, "# Coverage Report", sep="\n")
-          output_log <- paste(output_log, output, sep="\n")
-          Sys.setenv(GITHUB_STEP_SUMMARY = output_log)
-        shell: Rscript {0}
+        shell: Rscript {0} >> $GITHUB_STEP_SUMMARY
+      - name: Test coverage (end)
+        run: |
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+        shell: bash
       - name: upload coverage interactive report
         uses: actions/upload-artifact@v4
         if: runner.os == 'Linux'
