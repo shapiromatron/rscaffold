@@ -29,11 +29,6 @@ jobs:
           extra-packages: any::rcmdcheck, any::covr, any::DT, any::devtools
       - name: check package
         uses: r-lib/actions/check-r-package@v2
-      - name: Test coverage (start)
-        run: |
-          echo "# Test summary" >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-        shell: bash
       - name: Test coverage
         run: |
           coverage_output <- covr::package_coverage(
@@ -45,11 +40,37 @@ jobs:
             file = 'coverage_html/index.html',
             browse =  FALSE
           )
-        shell: Rscript {0} >> $GITHUB_STEP_SUMMARY
-      - name: Test coverage (end)
-        run: |
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-        shell: bash
+          markdown <- function(x, group = c("filename", "functions"), by = "line", ...) {
+            if (length(x) == 0) {
+              return(invisible(x))
+            }
+            group <- match.arg(group)
+            df <- covr::tally_coverage(x, by = by)
+
+            if (!NROW(df)) {
+              return(invisible(x))
+            }
+            percents <- tapply(
+              df$value, df[[group]],
+              FUN = function(x) (sum(x > 0) / length(x)) * 100
+            )
+            overall_percentage <- covr::percent_coverage(df, by = by)
+            paste0(
+              "|file|percents|\n|----|----|\n",
+              paste0("|Overall|", format(overall_percentage, digits = 4), "%|\n"),
+              paste0("|", names(percents), "|", format(percents, digits = 4), "%|", collapse = "\n"),
+              "\n"
+            )
+          }
+          coverage_output_markdown <- markdown(coverage_output)
+          # log output to $GITHUB_STEP_SUMMARY
+          gh <- Sys.getenv("GITHUB_STEP_SUMMARY", "")
+          gh <- paste(gh, "# Coverage", sep="\n")
+          gh <- paste(gh, "```", sep="\n")
+          gh <- paste(gh, coverage_output_markdown, sep="\n")
+          gh <- paste(gh, "```", sep="\n")
+          Sys.setenv(GITHUB_STEP_SUMMARY=gh)
+        shell: Rscript {0}
       - name: upload coverage interactive report
         uses: actions/upload-artifact@v4
         if: runner.os == 'Linux'
