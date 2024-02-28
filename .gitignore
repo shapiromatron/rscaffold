@@ -4,3 +4,8 @@
 .Rbuildignore
 
 coverage_html
+
+# cpp build
+cpp/build
+cpp/coverage
+coverage.info
