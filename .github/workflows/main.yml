@@ -64,12 +64,16 @@ jobs:
           }
           coverage_output_markdown <- markdown(coverage_output)
           # log output to $GITHUB_STEP_SUMMARY
-          gh <- Sys.getenv("GITHUB_STEP_SUMMARY", "")
-          gh <- paste(gh, "# Coverage", sep="\n")
+          gh <- "# Coverage Report"
           gh <- paste(gh, "```", sep="\n")
           gh <- paste(gh, coverage_output_markdown, sep="\n")
           gh <- paste(gh, "```", sep="\n")
-          Sys.setenv(GITHUB_STEP_SUMMARY=gh)
+          # Get system information
+          sys_info <- Sys.info()
+          is_linux <- sys_info["sysname"] == "Linux"
+          if (is_linux) {
+            write(gh, file=Sys.getenv("GITHUB_STEP_SUMMARY"))
+          }
         shell: Rscript {0}
       - name: upload coverage interactive report
         uses: actions/upload-artifact@v4
