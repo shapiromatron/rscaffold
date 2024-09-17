@@ -1,0 +1,21 @@
+---
+title: "Demo"
+author: "CatReg Development Team"
+date: "`r Sys.Date()`"
+output: html_vignette
+vignette: >
+  %\VignetteIndexEntry{Demo}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, collapse = TRUE, comment = "#>")
+```
+
+Build an R vignette!
+
+```{r}
+paste("Hello world!")
+```
+
