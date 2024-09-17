@@ -28,7 +28,7 @@ subtraction <- function(a, b) {
 #'
 #' @param x The parameter to square
 #' @return the result
-#' @useDynLib rscaffold
+#' @useDynLib rscaffold, .registration = TRUE
 #' @export
 square <- function(x) {
   result <- .C("square", as.double(x), "rscaffold.so")
