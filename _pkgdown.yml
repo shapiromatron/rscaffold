@@ -1,0 +1,5 @@
+url: shapiromatron.github.io/rscaffold/
+template:
+  bootstrap: 5
+  light-switch: true
+  bootswatch: flatly

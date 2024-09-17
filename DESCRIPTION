@@ -7,6 +7,7 @@ Authors@R:
         comment = c(ORCID = "0000-0002-5233-8092")
     )
 Description: An opinionated starter template for building an R package.
+URL: https://github.com/shapiromatron/rscaffold/
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -19,4 +20,6 @@ Config/Needs/dev:
     devtools,
     testthat,
     covr
+Config/Needs/website:
+    r-lib/pkgdown
 VignetteBuilder: knitr

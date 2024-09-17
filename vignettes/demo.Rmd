@@ -1,6 +1,6 @@
 ---
 title: "Demo"
-author: "CatReg Development Team"
+author: "RScaffold Development Team"
 date: "`r Sys.Date()`"
 output: html_vignette
 vignette: >
