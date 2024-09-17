@@ -13,5 +13,5 @@ R -e "devtools::install()"
 R -e "devtools::test()"
 
 # generate coverage report
-R -e "covr::report(file='coverage_html/index.html')"
+R -e "covr::report(file='coverage/index.html')"
 ```

@@ -33,11 +33,12 @@ jobs:
       - name: Check Package
         uses: r-lib/actions/check-r-package@v2
       - name: Test Coverage
-        run: Rscript scripts/coverage_html.R
+        run: Rscript scripts/coverage.R
       - name: Build documentation
         if: runner.os == 'Linux'
         run: |
           devtools::build_site(preview=F, new_process=F)
+          devtools::build_manual(path="dist")
         shell: Rscript {0}
       - name: Upload Interactive Coverage Report
         uses: actions/upload-artifact@v4
@@ -45,6 +46,7 @@ jobs:
         with:
           name: rscaffold
           path: |
-            coverage_html
+            coverage
             docs
+            dist
           retention-days: 90

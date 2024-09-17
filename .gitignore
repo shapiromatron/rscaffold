@@ -7,7 +7,7 @@
 *.o
 *.dll
 
-coverage_html
+/coverage
 /dist/*.tar.gz
 /Meta/
 /doc

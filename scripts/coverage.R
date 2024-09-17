@@ -1,13 +1,3 @@
-coverage_output <- covr::package_coverage(
-    quiet = FALSE,
-    clean = FALSE,
-)
-covr::report(
-    coverage_output,
-    file = 'coverage_html/index.html',
-    browse =  FALSE
-)
-
 markdown <- function(x, group = c("filename", "functions"), by = "line", ...) {
     if (length(x) == 0) {
         return(invisible(x))
@@ -29,15 +19,21 @@ markdown <- function(x, group = c("filename", "functions"), by = "line", ...) {
         paste0("|", names(percents), "|", format(percents, digits = 4), "%|", collapse = "\n"),
         "\n"
     )
-    }
-    coverage_output_markdown <- markdown(coverage_output)
-    # log output to $GITHUB_STEP_SUMMARY
-    gh <- "# Coverage Summary Report"
-    gh <- paste(gh, coverage_output_markdown, sep="\n")
-    gh <- paste(gh, "View the interactive report by downloading the artifact.", sep="\n")
-    # Get system information
-    sys_info <- Sys.info()
-    is_linux <- sys_info["sysname"] == "Linux"
-    if (is_linux) {
-    write(gh, file=Sys.getenv("GITHUB_STEP_SUMMARY"))
+}
+
+coverage_output <- covr::package_coverage(quiet = FALSE, clean = FALSE)
+covr::report(coverage_output, file = 'coverage/index.html', browse =  FALSE)
+
+# log output to $GITHUB_STEP_SUMMARY
+is_linux <- Sys.info()["sysname"] == "Linux"
+if (is_linux) {
+    write(
+        paste(
+            "# Coverage Summary Report",
+            markdown(coverage_output),
+            "View the interactive report by downloading the artifact.",
+            sep="\n"
+        ),
+        file=Sys.getenv("GITHUB_STEP_SUMMARY")
+    )
 }
