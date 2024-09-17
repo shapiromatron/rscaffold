@@ -3,4 +3,4 @@
 export(addition)
 export(square)
 export(subtraction)
-useDynLib(rscaffold)
+useDynLib(rscaffold, .registration = TRUE)

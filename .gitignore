@@ -3,4 +3,12 @@
 .Rproj.user
 .Rbuildignore
 
-coverage_html
+*.so
+*.o
+*.dll
+
+/coverage
+/dist/*.tar.gz
+/Meta/
+/doc
+/docs
